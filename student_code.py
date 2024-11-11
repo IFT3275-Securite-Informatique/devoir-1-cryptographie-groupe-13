@@ -1,3 +1,6 @@
+# Équipe 13
+# Nikolas Lévesque (20276665) et Abdelmouhcine Messaad (2151011)
+
 import random
 from collections import Counter
 import math
