@@ -155,3 +155,79 @@ def decrypt(C):
     # décrypter le message avec le meilleur mapping
     M = decrypt_with_mapping(best_mapping, ciphertext)
     return M
+
+
+################################################################################
+#             Question 2 - Première version non fonctionnelle!                 #
+################################################################################
+"""
+import requests
+import string
+
+# télécharge le texte en ligne à partir d'une URL
+def telecharger_texte(url):
+    reponse = requests.get(url)
+    reponse.encoding = 'utf-8'  # le texte est bien encodé en UTF-8
+    texte = reponse.text.lower()  # minuscules pour uniformiser
+    return texte
+
+# compter les occurrences de chaque caractère dans le texte téléchargé
+def compter_occurrences_caracteres(texte):
+    return Counter(texte)
+
+# analyser les occurrences et la fréquence de chaque octet dans une chaîne binaire
+def compter_occurrences_et_frequence_octets(code_binaire):
+    # diviser la chaîne binaire en morceaux de 8 bits
+    octets = [code_binaire[i:i + 8] for i in range(0, len(code_binaire), 8)]
+    occurrences_octets = Counter(octets)
+    return occurrences_octets
+
+# associer les fréquences des caractères aux octets en fonction de leur fréquence
+def associer_frequences(occurrences_caracteres, occurrences_octets):
+    # trier les caractères et octets par fréquence décroissante
+    caracteres_tries = sorted(occurrences_caracteres.items(), key=lambda x: x[1], reverse=True)
+    octets_tries = sorted(occurrences_octets.items(), key=lambda x: x[1], reverse=True)
+
+    # créer une correspondance entre les octets et les caractères en fonction de leur fréquence
+    substitution = {}
+    for i in range(min(len(caracteres_tries), len(octets_tries))):
+        caractere = caracteres_tries[i][0]
+        octet = octets_tries[i][0]
+        substitution[octet] = caractere
+
+    return substitution
+
+# décrypter le message en utilisant la correspondance entre octets et caractères
+def decrypt_message(code_binaire, substitution):
+    # diviser la chaîne binaire en morceaux de 8 bits
+    octets = [code_binaire[i:i + 8] for i in range(0, len(code_binaire), 8)]
+
+    # remplacer chaque octet par le caractère correspondant
+    message_decrypte = ''.join([substitution.get(octet, '?') for octet in octets])
+
+    return message_decrypte
+
+# Exemple d'utilisation avec le texte dans le document des consignes
+url = "https://www.gutenberg.org/ebooks/13846.txt.utf-8"
+texte = telecharger_texte(url)
+occurrences_caracteres = compter_occurrences_caracteres(texte)
+
+# Exemple de code binaire (code chiffré)
+code_binaire = "11010101011011000111010011001111000011100110110011001111110011000000110111001010010111010111111011001100011011001100111101101100011000011100111100001110011011001100111111001100000011011100101001011101011111101100110001101100011101001100111100001110011011001100111100111111000100100000011000111101000100100110110011001111011011000110000110010101000011000000111001101100110011110010000011001110011000010110110001110100110011110000111001101100110011110010000011001110011000010110110011001111011011000110000111001111000011100110110011001111001111110001001000000110001111010001001001101100011111001100111101011010001011011100101011001111011011001101010111001111"
+  # remplace par le code réel
+occurrences_octets = compter_occurrences_et_frequence_octets(code_binaire)
+
+# associer les fréquences des caractères aux octets
+substitution = associer_frequences(occurrences_caracteres, occurrences_octets)
+
+# décrypter le message
+message_decrypte = decrypt_message(code_binaire, substitution)
+
+# afficher les résultats
+print("Substitution des octets avec les caractères :")
+for octet, caractere in substitution.items():
+    print(f"{octet} -> {caractere}")
+
+print("\nMessage décrypté :")
+print(message_decrypte)
+"""
